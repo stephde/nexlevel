@@ -22,9 +22,10 @@ In order to run the app you need to:
 
 A couple of things to note:
 
-	- Pretty sure by now you know how to npm install and all, if you do have a problem setting up email me at: malcolmmaima [at] gmail [dot] com
+	
 	- Make sure you have MongoDB installed on your local machine.
 	- Before running the above steps, run **Mongod.exe** and **mongo.exe** located in your MongoDB program files folder.
+	- Pretty sure by now you know how to npm install and all, if you do have a problem setting up email me at: malcolmmaima [at] gmail [dot] com
 	
 Own Logic
 -------
