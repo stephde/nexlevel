@@ -26,6 +26,7 @@ const options = {
     password: {
       autoCapitalize: 'none',
       password: true,
+      secureTextEntry: true, 
       autoCorrect: false
     }
   }
@@ -105,6 +106,7 @@ class LoginView extends React.Component {
           type={User}
           value={this.state.value}
           onChange={this._onChange}
+
         />
         <TouchableHighlight onPress={this._handleAdd}>
           <Text style={[styles.button, styles.greenButton]}>Log In</Text>

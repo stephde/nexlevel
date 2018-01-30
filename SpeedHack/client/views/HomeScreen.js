@@ -101,7 +101,7 @@ const LoginApp = StackNavigator({
 const ProtectedApp = StackNavigator({
   Protected: { screen: ProtectedView },
 }, {
-  headerMode: 'none' 
+  headerMode: 'none'
 });
 
 const styles = StyleSheet.create({
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#4CD964'
   },
   blueButton: {
-    backgroundColor: '#34AADC'
+    backgroundColor: '#34AADC' 
   },
   redButton: {
     backgroundColor: '#FF3B30',

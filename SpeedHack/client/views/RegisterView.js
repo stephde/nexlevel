@@ -25,6 +25,7 @@ const options = {
     password: {
       autoCapitalize: 'none',
       password: true,
+      secureTextEntry: true,
       autoCorrect: false
     }
   }
