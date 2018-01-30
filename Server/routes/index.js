@@ -16,7 +16,7 @@ router.get('/protected', function (req, res, next) {
 // authentication was successful! send user the secret code.
       return res
         .status(200)
-        .json({ secret: '123' });
+        .json({ secret: 'hackerman' });
     }
   })(req, res, next);
 });

@@ -1,12 +1,16 @@
 import React from 'react';
 import {
   AsyncStorage,
+  ActivityIndicator,
   Component,
   ScrollView,
   StyleSheet,
   TouchableHighlight,
-  Text
+  Text,
+  StackNavigator
 } from 'react-native'
+
+import ProtectedView from './ProtectedView'
 
 const t = require('tcomb-form-native')
 
@@ -17,6 +21,7 @@ const User = t.struct({
   password:  t.String
 })
 
+
 const options = {
   fields: {
     email: {
@@ -26,7 +31,7 @@ const options = {
     password: {
       autoCapitalize: 'none',
       password: true,
-      secureTextEntry: true, 
+      secureTextEntry: true,
       autoCorrect: false
     }
   }
@@ -82,9 +87,11 @@ class LoginView extends React.Component {
           alert(res.error)
         } else {
           AsyncStorage.setItem('jwt', res.token)
-          alert(`Success! You may now access protected content.`)
+          alert(`Success!`)
           // Redirect to home screen
-          this.props.navigator.pop()
+          //this.props.navigator.pop()
+          const { navigate } = this.props.navigation;
+          navigate('ProtectedView')  
         }
       })
       .catch(() => {
@@ -109,7 +116,7 @@ class LoginView extends React.Component {
 
         />
         <TouchableHighlight onPress={this._handleAdd}>
-          <Text style={[styles.button, styles.greenButton]}>Log In</Text>
+          <Text style={[styles.button, styles.redButton]}>Log In</Text>
         </TouchableHighlight>
       </ScrollView>
     )
@@ -129,8 +136,8 @@ var styles = StyleSheet.create({
     marginBottom: 20,
     color: '#fff'
   },
-  greenButton: {
-    backgroundColor: '#4CD964'
+  redButton: {
+    backgroundColor: '#ff0000'
   },
   centering: {
     alignItems: 'center',
