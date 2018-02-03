@@ -90,8 +90,6 @@ class LoginView extends React.Component {
           alert(`Success!`)
           // Redirect to home screen
           //this.props.navigator.pop()
-          const { navigate } = this.props.navigation;
-          navigate('ProtectedView')  
         }
       })
       .catch(() => {
