@@ -6,7 +6,7 @@
 Screenshots
 -------
 #Start Server
-<a href="url"><img src=./Screenshots/CMD.png height="550"  ></a>
+<a href="url"><img src=../Screenshots/CMD.png height="550"  ></a>
 
 #Test Register Endpoint
 <a href="url"><img src=./Screenshots/Postman-Register.png height="550"  ></a>
