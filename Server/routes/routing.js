@@ -14,7 +14,7 @@ const mapHereTransportMean = {
     busPublic: 'Bus'
 }
 
-const requestCache = []
+let requestCache = []
 
 router.get('/', function (req, res, next) {
 
@@ -34,6 +34,24 @@ router.get('/', function (req, res, next) {
 
 router.get('/requests', function (req, res, next) {
     res.status(200).json(requestCache).send()
+})
+
+router.post('/requests', function (req, res, next) {
+    let requests = req.body.requests
+
+    if(requests.length > 0)
+        requestCache = req.body.requests
+
+    res.sendStatus(200)
+})
+
+router.post('/request', function (req, res, next) {
+    const origin = req.body.params.origin;
+    const destination = req.body.params.destination;
+
+    cacheRequest(origin, destination)
+
+    res.sendStatus(200)
 })
 
 router.get('/autocomplete', (req, res, next) => {
