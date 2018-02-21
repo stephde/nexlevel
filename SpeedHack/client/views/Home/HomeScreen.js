@@ -109,7 +109,7 @@ const RootNavigator = StackNavigator({
   Route: {
     screen: RouteScreen,
     navigationOptions: {
-      headerTitle: "Login"
+      headerTitle: "Your Route"
     }
   }
 });
