@@ -4,9 +4,8 @@ function Here () {
     const url = "https://route.api.here.com/"
     //ToDo: add actual api credentials
     const apiKey = {
-        api_key: 'DEMO_KEY',
-        app_id: 'nexlevel-server',
-        app_code: 'secret'
+        app_id: process.env.HERE_APP_ID,
+        app_code: process.env.HERE_APP_CODE
     }
 
     function get(path, params) {
@@ -27,8 +26,7 @@ function Here () {
                 mode: "fastest;car;traffic:disabled"
             })
             .then(response => {
-                console.log(response.data.url);
-                console.log(response.data.explanation);
+                return response.data.response
             })
             .catch(error => {
                 console.log(error);
