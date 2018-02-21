@@ -46,18 +46,26 @@ router.get('/mock', (req, res, next) => {
 router.get('/mockdynamic', (req, res, next) => {
 
     const origin = req.query.origin || [52.485617,13.3636133];
+    const originName = req.query.originName || "U-Bahnhof Bülowstraße"
     const destination = req.query.destination || [52.4986868,13.3728273];
 
     here.getRoute(origin, destination)
         .then(result => {
             let route = result.route[0]
-            let segments = route.publicTransportLine.map(transportLine => {
+            let segments = []
+
+            route.publicTransportLine.forEach((transportLine, index) => {
                 let segment = getMockSegment()
 
                 segment.type = mapHereTransportMean[transportLine.type] || transportLine.type
                 segment.arrivalName = transportLine.destination
 
-                return segment
+                if(index > 0)
+                    segment.departureName = segments[index - 1].arrivalName
+                else
+                    segment.departureName = originName
+
+                segments.push(segment)
             })
 
             return {
