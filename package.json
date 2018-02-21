@@ -1,0 +1,19 @@
+{
+  "name": "nexlevel",
+  "version": "1.0.0",
+  "description": "Dynamic public transportation",
+  "main": "Server/bin/www",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stephde/nexlevel.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stephde/nexlevel/issues"
+  },
+  "homepage": "https://github.com/stephde/nexlevel#readme"
+}
