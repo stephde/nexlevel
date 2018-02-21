@@ -82,7 +82,8 @@ router.get('/mock', (req, res, next) => {
 router.get('/mockdynamic', (req, res, next) => {
 
     const origin = req.query.origin || [52.485617,13.3636133];
-    const originName = req.query.originName || "U-Bahnhof Bülowstraße"
+    //ToDo: actually get real destination name !!!
+    const destName = req.query.destName || "U-Bahnhof Bülowstraße"
     const destination = req.query.destination || [52.4986868,13.3728273];
 
     cacheRequest(origin, destination)
@@ -90,20 +91,37 @@ router.get('/mockdynamic', (req, res, next) => {
     here.getRoute(origin, destination)
         .then(result => {
             let route = result.route[0]
-            let segments = []
 
-            route.publicTransportLine.forEach((transportLine, index) => {
+            let maneuvers = route.leg[0].maneuver
+                .filter(m => m._type === 'PublicTransportManeuverType')
+                .filter((_, i) => i % 2 === 0)
+                .map((e, i) => ({
+                    ...e,
+                    ...route.publicTransportLine[i],
+                }))
+
+            let segments = maneuvers.map((maneuver) => {
                 let segment = getMockSegment()
 
-                segment.type = mapHereTransportMean[transportLine.type] || transportLine.type
-                segment.arrivalName = transportLine.destination
+                segment.departureName = maneuver.stopName
+                segment.departureLocation = maneuver.position
+                segment.type = mapHereTransportMean[maneuver.type] || maneuver.type
 
-                if(index > 0)
-                    segment.departureName = segments[index - 1].arrivalName
-                else
-                    segment.departureName = originName
+                return segment
+            })
 
-                segments.push(segment)
+            segments.forEach((segment, index) => {
+                if(index < (segments.length - 1)) {
+                    console.log("Set arrival name and location")
+                    segment.arrivalName = segments[index+1].departureName
+                    segment.arrivalLocation = segments[index+1].departureLocation
+                } else {
+                    segment.arrivalName = destName
+                    segment.arrivalLocation = {
+                        latitude: destination[0],
+                        longitude: destination[1]
+                    }
+                }
             })
 
             return {
