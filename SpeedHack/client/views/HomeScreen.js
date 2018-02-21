@@ -2,7 +2,7 @@ import React from "react";
 import {
   View,
   Text,
-  Button,
+  // Button,
   StyleSheet,
   TouchableHighlight,
   Component,
