@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -6,132 +6,128 @@ import {
   StyleSheet,
   TouchableHighlight,
   Component,
-  AsyncStorage } from 'react-native';
-import { StackNavigator } from 'react-navigation'; // 1.0.0-beta.14
+  AsyncStorage
+} from "react-native";
+import { StackNavigator } from "react-navigation"; // 1.0.0-beta.14
 
-import RegisterView from './RegisterView';
-import LoginView from './LoginView';
-import ProtectedView from './ProtectedView'
-import Test from './Test';
+import RegisterView from "./RegisterView";
+import LoginView from "./LoginView";
+import ProtectedView from "./ProtectedView";
+import Test from "./Test";
 
 _handleLogOut = () => {
-  AsyncStorage.removeItem('jwt');
-  alert('You have been logged out.');
-}
+  AsyncStorage.removeItem("jwt");
+  alert("You have been logged out.");
+};
 
 const HomeScreen = ({ navigation }) => (
   <View style={styles.container}>
-    <TouchableHighlight onPress={ () => navigation.navigate('Register') }>
-      <Text style={[styles.button, styles.blueButton]}>
-        Register
-      </Text>
+    <TouchableHighlight onPress={() => navigation.navigate("Register")}>
+      <Text style={[styles.button, styles.blueButton]}>Register</Text>
     </TouchableHighlight>
-    <TouchableHighlight onPress={() => navigation.navigate('Login')}>
-      <Text style={[styles.button, styles.greenButton]}>
-        Log In
-      </Text>
+    <TouchableHighlight onPress={() => navigation.navigate("Login")}>
+      <Text style={[styles.button, styles.greenButton]}>Log Out Yeah</Text>
     </TouchableHighlight>
     <TouchableHighlight onPress={this._handleLogOut}>
-      <Text style={[styles.button, styles.greyButton]}>
-        Log Out
-      </Text>
+      <Text style={[styles.button, styles.greyButton]}>Log Out</Text>
     </TouchableHighlight>
-    <TouchableHighlight onPress={() => navigation.navigate('Protected')}>
-      <Text style={[styles.button, styles.redButton]}>
-        Protected Content
-      </Text>
+    <TouchableHighlight onPress={() => navigation.navigate("Protected")}>
+      <Text style={[styles.button, styles.redButton]}>Protected Content</Text>
     </TouchableHighlight>
   </View>
 );
 
-const RegisterScreen = () => (
-  <RegisterApp />
-);
+const RegisterScreen = () => <RegisterApp />;
 
-const LoginScreen = () => (
-  <LoginApp />
-);
+const LoginScreen = () => <LoginApp />;
 
-const ProtectedScreen = () => (
-  <ProtectedApp />
-);
+const ProtectedScreen = () => <ProtectedApp />;
 
 const RootNavigator = StackNavigator({
   Home: {
     screen: HomeScreen,
     navigationOptions: {
-      title: 'Welcome to SpeedHackApp',
-    },
+      title: "Welcome to SpeedHackApp"
+    }
   },
 
   Register: {
     screen: RegisterScreen,
     navigationOptions: {
-      headerTitle: 'Register',
-    },
+      headerTitle: "Register"
+    }
   },
 
   Login: {
     screen: LoginScreen,
     navigationOptions: {
-        headerTitle: 'Login',
-      },
-    },
+      headerTitle: "Login"
+    }
+  },
 
   Protected: {
     screen: ProtectedScreen,
     navigationOptions: {
-      headerTitle: 'Protected',
-    },
+      headerTitle: "Protected"
+    }
+  }
+});
+
+const RegisterApp = StackNavigator(
+  {
+    Register: { screen: RegisterView }
   },
-});
+  {
+    headerMode: "none"
+  }
+);
 
-const RegisterApp = StackNavigator({
-  Register: { screen: RegisterView},
-}, {
-  headerMode: 'none'
-});
+const LoginApp = StackNavigator(
+  {
+    Login: { screen: LoginView }
+  },
+  {
+    headerMode: "none"
+  }
+);
 
-const LoginApp = StackNavigator({
-  Login: { screen: LoginView},
-}, {
-  headerMode: 'none'
-});
-
-const ProtectedApp = StackNavigator({
-  Protected: { screen: ProtectedView },
-}, {
-  headerMode: 'none'
-});
+const ProtectedApp = StackNavigator(
+  {
+    Protected: { screen: ProtectedView }
+  },
+  {
+    headerMode: "none"
+  }
+);
 
 const styles = StyleSheet.create({
   container: {
     marginTop: 40,
     padding: 80,
     flex: 1,
-    flexDirection: 'column'
+    flexDirection: "column"
   },
   button: {
     borderRadius: 4,
     padding: 20,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 20,
-    color: '#fff'
+    color: "#fff"
   },
   greenButton: {
-    backgroundColor: '#4CD964'
+    backgroundColor: "#4CD964"
   },
   blueButton: {
-    backgroundColor: '#34AADC'
+    backgroundColor: "#34AADC"
   },
   redButton: {
-    backgroundColor: '#FF3B30',
-    color: '#fff'
+    backgroundColor: "#FF3B30",
+    color: "#fff"
   },
   greyButton: {
-    backgroundColor: '#777',
-    color: '#fff'
+    backgroundColor: "#777",
+    color: "#fff"
   }
-})
+});
 
 export default RootNavigator;
