@@ -16,86 +16,159 @@ import { StackNavigator } from "react-navigation"; // 1.0.0-beta.14
 
 import RouteView from "../Route/RouteView";
 import styles from "./styles";
+import MapView from "./Map.js";
+import { getPossibleLocations } from "../../api.js";
 
 import busImage from "./bus.png";
 import skyline from "./skyline.jpg";
 
-const HomeScreen = ({ navigation }) => (
-  <Container
-    style={{
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center"
-    }}
-  >
-    <Image
-      style={{
-        backgroundColor: "#ccc",
-        resizeMode: "cover",
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        justifyContent: "center"
-      }}
-      source={skyline}
-    />
-    <View
-      style={{
-        backgroundColor: "#fff",
-        opacity: 0.7,
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%"
-      }}
-    />
-    <Content
-      contentContainerStyle={{
-        flex: 1,
-        flexDirection: "column",
-        justifyContent: "space-between"
-      }}
-    >
-      <Form>
-        <Item floatingLabel style={{ margin: "5%" }}>
-          <Label>From</Label>
-          <Input />
-          <Icon active name="ios-bus-outline" />
-        </Item>
-      </Form>
-      <View
+class HomeScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      suggestions: [],
+      inputMode: false,
+      selectedDestinationIndex: -1
+    };
+  }
+  onChange(value) {
+    getPossibleLocations(value).then(suggestions => {
+      console.log(suggestions);
+      this.setState({
+        suggestions: suggestions.map(suggestion => {
+          return {
+            name: suggestion.label,
+            coordinate: suggestion.coordinates
+          };
+        })
+      });
+    });
+  }
+
+  onFocus() {
+    this.setState({
+      inputMode: true
+    });
+  }
+
+  findRoute() {
+    if (this.state.selectedDestinationIndex > -1)
+      this.props.navigation.navigate(
+        "Route",
+        this.state.suggestions[this.state.selectedDestinationIndex]
+      );
+  }
+
+  onBlur() {
+    // console.log("onBlure");
+    // this.setState({
+    //   inputMode: false
+    // });
+  }
+
+  selectDestination(index) {
+    this.setState({
+      selectedDestinationIndex: index
+    });
+  }
+
+  render() {
+    return (
+      <Container
         style={{
-          width: "90%",
-          margin: "5%",
-          height: 70,
           flexDirection: "row",
+          alignItems: "center",
           justifyContent: "center"
         }}
       >
-        <Button
-          onPress={() =>
-            navigation.navigate("Route", {
-              from: { lat: 0, long: 0 },
-              to: { lat: 0, long: 0 }
-            })
-          }
-          bordered
+        <Image
           style={{
-            borderRadius: 100,
-            width: 70,
-            height: 70
+            backgroundColor: "#ccc",
+            resizeMode: "cover",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            justifyContent: "center"
+          }}
+          source={skyline}
+        />
+        <View
+          style={{
+            backgroundColor: "#fff",
+            opacity: 0.7,
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%"
+          }}
+        />
+
+        <Content
+          contentContainerStyle={{
+            flex: 1,
+            flexDirection: "column",
+            justifyContent: "space-between"
           }}
         >
-          <Text style={{ textAlign: "center", width: "100%" }}>Go</Text>
-        </Button>
-      </View>
-    </Content>
-  </Container>
-);
-
+          <MapView
+            visible={this.state.inputMode}
+            markers={this.state.suggestions}
+            selectMarker={index => this.selectDestination(index)}
+          />
+          <View
+            pointerEvents="none"
+            style={{
+              backgroundColor: "#fff",
+              opacity: 0.6,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%"
+            }}
+          />
+          <Form>
+            <Item floatingLabel style={{ margin: "5%" }}>
+              <Label>From</Label>
+              <Input
+                onChangeText={value => this.onChange(value)}
+                onFocus={() => this.onFocus()}
+                onBlur={() => this.onBlur()}
+              />
+              <Icon active name="ios-bus-outline" />
+            </Item>
+          </Form>
+          <View
+            style={{
+              width: "90%",
+              margin: "5%",
+              height: 70,
+              flexDirection: "row",
+              justifyContent: "center"
+            }}
+          >
+            {this.state.selectedDestinationIndex > -1 ? (
+              <Button
+                onPress={() => this.findRoute()}
+                bordered
+                style={{
+                  borderRadius: 100,
+                  width: 70,
+                  height: 70
+                }}
+              >
+                <Text style={{ textAlign: "center", width: "100%" }}>Go</Text>
+              </Button>
+            ) : null}
+          </View>
+        </Content>
+      </Container>
+    );
+  }
+}
 const RouteScreen = () => <RouteApp />;
 
 const RootNavigator = StackNavigator({
