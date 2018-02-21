@@ -12,24 +12,32 @@ export default class Map extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (!this.map) return;
-    this.map.fitToCoordinates(
-      nextProps.markers.map(marker => {
-        return marker.coordinate;
-      }),
-      {
-        edgePadding: {
-          top: 60,
-          right: 60,
-          bottom: 60,
-          left: 60
-        },
-        animated: true
-      }
-    );
+    if (
+      JSON.stringify(this.props.markers) !== JSON.stringify(nextProps.markers)
+    ) {
+      this.map.fitToCoordinates(
+        nextProps.markers.map(marker => {
+          return marker.coordinate;
+        }),
+        {
+          edgePadding: {
+            top: 60,
+            right: 60,
+            bottom: 60,
+            left: 60
+          },
+          animated: true
+        }
+      );
+    }
+  }
+
+  selectMarker(index) {
+    this.map.animateToCoordinate(this.props.markers[index].coordinate, 100);
+    this.props.selectMarker(index);
   }
 
   render() {
-    console.log("Markers", this.props.markers);
     return this.props.visible ? (
       <MapView
         ref={map => (this.map = map)}
@@ -51,7 +59,7 @@ export default class Map extends React.Component {
           <MapView.Marker
             coordinate={marker.coordinate}
             title={marker.name}
-            onPress={() => this.props.selectMarker(index)}
+            onPress={() => this.selectMarker(index)}
           />
         ))}
       </MapView>
