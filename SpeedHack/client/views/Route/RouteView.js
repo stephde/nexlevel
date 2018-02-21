@@ -1,22 +1,25 @@
 import React from "react";
+import { MapView } from "expo";
 import {
   Container,
   Content,
-  Text,
+  // Text,
   Spinner,
   Card,
   CardItem,
   Body
 } from "native-base";
 import {
+  Dimensions,
   Component,
   ScrollView,
   StyleSheet,
   TouchableHighlight,
+  Text,
   View
 } from "react-native";
 
-const t = require("tcomb-form-native");
+const { height, width } = Dimensions.get("window");
 
 class RouteView extends React.Component {
   constructor(props) {
@@ -42,56 +45,15 @@ class RouteView extends React.Component {
 
   componentDidMount() {
     setTimeout(() => {
-      this.setState({
-        isLoading: false,
-        connectionSegments: [
-          {
-            name: "Jacky",
-            type: "BUS",
-            departureTime: {
-              h: 14,
-              min: 2
-            },
-            departureName: "U-Bahnhof Bülowstraße",
-            departureLocation: {
-              latitude: "",
-              longitute: ""
-            },
-            arrivalTime: {
-              h: 14,
-              min: 21
-            },
-            arrivalName: "Alexanderplatz",
-            arrivalLocation: {
-              latitude: "",
-              longitute: ""
-            }
-          },
-          {
-            name: "Paul",
-            type: "BUS",
-            departureTime: {
-              h: 14,
-              min: 23
-            },
-            departureName: "Alexanderplatz",
-            departureLocation: {
-              latitude: "",
-              longitute: ""
-            },
-            arrivalTime: {
-              h: 14,
-              min: 35
-            },
-            arrivalName: "Storkower Straße",
-            arrivalLocation: {
-              latitude: "",
-              longitute: ""
-            }
-          }
-        ]
-      });
-    }, 2000);
+      fetch("https://nexlevel-server.herokuapp.com/routing/mockdynamic")
+        .then(response => response.json())
+        .then(json =>
+          this.setState({
+            isLoading: false,
+            connectionSegments: json.connectionSegments
+          })
+        );
+    }, 1000);
   }
 
   componentWillUnmount() {
@@ -114,7 +76,7 @@ class RouteView extends React.Component {
           ) : (
             <View>
               {connectionSegments.map(segment => (
-                <Card key={segment.name}>
+                <Card key={segment.name} transparent>
                   <CardItem header>
                     <Text>{`${segment.departureName} - ${
                       segment.arrivalName
@@ -130,6 +92,18 @@ class RouteView extends React.Component {
                   </CardItem>
                 </Card>
               ))}
+              <MapView
+                style={{
+                  width: width,
+                  height: 250
+                }}
+                initialRegion={{
+                  latitude: 37.78825,
+                  longitude: -122.4324,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421
+                }}
+              />
             </View>
           )}
         </Content>
