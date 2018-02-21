@@ -4,7 +4,8 @@
   "description": "Dynamic public transportation",
   "main": "Server/bin/www",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+	"postinstall": "cd Server; npm install"
   },
   "repository": {
     "type": "git",
