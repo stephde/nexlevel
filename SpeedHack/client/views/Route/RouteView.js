@@ -18,6 +18,7 @@ import {
   Text,
   View
 } from "react-native";
+import BusMarker from "./BusMarker";
 
 const { height, width } = Dimensions.get("window");
 
@@ -56,19 +57,11 @@ class RouteView extends React.Component {
         .then(json =>
           this.setState({
             isLoading: false,
-            connectionSegments: json.connectionSegments
+            connectionSegments: json.connectionSegments,
+            bus: {}
           })
         );
     }, 1000);
-  }
-
-  componentWillUnmount() {
-    this.setState = {
-      value: {
-        email: "",
-        password: null
-      }
-    };
   }
 
   render() {
@@ -129,6 +122,12 @@ class RouteView extends React.Component {
                     key={`${coordinate.latitude}-${coordinate.longitude}`}
                   />
                 ))}
+                <BusMarker
+                  coordinates={[
+                    { latitude: 52.485196, longitude: 13.355199 },
+                    ...coordinates
+                  ]}
+                />
               </MapView>
             </View>
           )}
