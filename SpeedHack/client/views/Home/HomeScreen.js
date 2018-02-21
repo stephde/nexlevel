@@ -97,7 +97,7 @@ class HomeScreen extends React.Component {
         <View
           style={{
             backgroundColor: "#fff",
-            opacity: 0.7,
+            opacity: 0.6,
             position: "absolute",
             top: 0,
             left: 0,
