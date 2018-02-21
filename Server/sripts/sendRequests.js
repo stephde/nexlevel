@@ -4,6 +4,8 @@ const host = 'http://localhost:3000'
 const path = '/routing/request'
 
 function getNextCoordinate() {
+
+    //ToDo: get max and min coordinates for berlin and randomize
     return {
         //ToDo: is this the right oder?
         latitude: 13.3636133,
