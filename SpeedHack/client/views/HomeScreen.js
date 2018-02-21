@@ -10,13 +10,8 @@ import {
 } from "react-native";
 import { StackNavigator } from "react-navigation"; // 1.0.0-beta.14
 
-import RouteView from "./RegisterView";
+import RouteView from "./RouteView";
 import Test from "./Test";
-
-_handleLogOut = () => {
-  AsyncStorage.removeItem("jwt");
-  alert("You have been logged out.");
-};
 
 const HomeScreen = ({ navigation }) => (
   <View style={styles.container}>
@@ -38,7 +33,7 @@ const RootNavigator = StackNavigator({
   Route: {
     screen: RouteScreen,
     navigationOptions: {
-      headerTitle: "Login"
+      headerTitle: "Your Route"
     }
   }
 });
