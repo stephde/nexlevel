@@ -76,7 +76,12 @@ const HomeScreen = ({ navigation }) => (
         }}
       >
         <Button
-          onPress={() => navigation.navigate("Route")}
+          onPress={() =>
+            navigation.navigate("Route", {
+              from: { lat: 0, long: 0 },
+              to: { lat: 0, long: 0 }
+            })
+          }
           bordered
           style={{
             borderRadius: 100,
