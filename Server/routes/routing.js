@@ -7,8 +7,8 @@ let here = new Here()
 
 router.get('/', function (req, res, next) {
 
-    const origin = req.params.origin;
-    const destination = req.params.destination;
+    const origin = req.query.origin;
+    const destination = req.query.destination;
 
     here.getRoute(origin, destination)
         .then(result => {
@@ -18,6 +18,18 @@ router.get('/', function (req, res, next) {
             res.status(500).json({error: err}).send()
         })
 });
+
+router.get('/autocomplete', (req, res, next) => {
+    const query = req.query.query
+
+    here.autocomplete(query)
+        .then(r => {
+            res.status(200).json( r ).send()
+        })
+        .catch(e => {
+            res.status(500).json({ error: e }).send()
+        })
+})
 
 router.get('/mock', (req, res, next) => {
 

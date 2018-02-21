@@ -17,6 +17,15 @@ function Here () {
         })
     }
 
+    function getCIT(path, params) {
+        Object.assign(params, apiKey)
+        const url = "http://autocomplete.geocoder.cit.api.here.com/"
+
+        return axios.get(url + path, {
+            params: params
+        })
+    }
+
     this.getRoute = function (origin, destination) {
 
         return get("routing/7.2/calculateroute.json", {
@@ -31,6 +40,14 @@ function Here () {
             .catch(error => {
                 console.log(error);
             });
+    }
+
+    this.autocomplete = function (substr) {
+        // http://autocomplete.geocoder.cit.api.here.com/
+        return getCIT("6.2/suggest.json", {
+            query: substr,
+            prox: '52.4986868,13.3728273',
+        }).then(r => r.data).catch(e => console.log(e))
     }
 
     return this
