@@ -1,8 +1,8 @@
 import React from "react";
 import { MapView } from "expo";
 import Bus from "./bus.png";
-
-const DIFFERENCE = 0.0001 * 2;
+const STEP_SIZE = 0.0001;
+const MAX_DIFFERENCE = STEP_SIZE * 2;
 
 export default class BusMarker extends React.Component {
   constructor(props) {
@@ -13,23 +13,33 @@ export default class BusMarker extends React.Component {
       longitude: props.coordinates[0].longitude,
       coordinates: props.coordinates
     };
-    this.interval = setInterval(this.updateBusLocation, 1000);
+    this.interval = setInterval(this.updateBusLocation, 100);
   }
   updateBusLocation = () => {
-    if (this.state.index > this.state.coordinates.length) {
+    if (this.state.index >= this.state.coordinates.length) {
       clearInterval(this.interval);
       return;
     }
     const index = this.state.index;
     const latDifference =
-      this.state.latitude - this.state.coordinates[index].latitude;
+      this.state.coordinates[index].latitude - this.state.latitude;
     const longDifference =
-      this.state.longitude - this.state.coordinates[index].longitude;
-    if (Math.abs(DIFFERENCE) > DIFFERENCE) {
+      this.state.coordinates[index].longitude - this.state.longitude;
+    const totalDifference = Math.abs(latDifference) + Math.abs(longDifference);
+    if (totalDifference > MAX_DIFFERENCE) {
+      this.setState({
+        latitude:
+          this.state.latitude + STEP_SIZE * (latDifference / totalDifference),
+        longitude:
+          this.state.longitude + STEP_SIZE * (longDifference / totalDifference)
+      });
     } else {
+      this.setState({
+        index: this.state.index + 1,
+        latitude: this.state.coordinates[index].latitude,
+        longitude: this.state.coordinates[index].longitude
+      });
     }
-    // console.log(latDifference);
-    // console.log(longDifference);
   };
 
   componentWillReceiveProps(nextProps) {
@@ -41,7 +51,7 @@ export default class BusMarker extends React.Component {
         longitude: nextProps.coordinates[0].longitude
       });
       if (this.interval) clearInterval(this.interval);
-      this.interval = setInterval(this.updateBusLocation, 1000);
+      this.interval = setInterval(this.updateBusLocation, 100);
     }
   }
 
