@@ -2,12 +2,13 @@ import React from "react";
 import {
   View,
   Text,
-  Button,
+  // Button,
   StyleSheet,
   TouchableHighlight,
   Component,
   AsyncStorage
 } from "react-native";
+import { Button, Icon } from "native-base";
 import { StackNavigator } from "react-navigation"; // 1.0.0-beta.14
 
 import RegisterView from "./RegisterView";
@@ -25,6 +26,9 @@ const HomeScreen = ({ navigation }) => (
     <TouchableHighlight onPress={() => navigation.navigate("Register")}>
       <Text style={[styles.button, styles.blueButton]}>Register</Text>
     </TouchableHighlight>
+    <Button transparent>
+      <Icon name="menu" />
+    </Button>
     <TouchableHighlight onPress={() => navigation.navigate("Login")}>
       <Text style={[styles.button, styles.greenButton]}>Log Out Yeah</Text>
     </TouchableHighlight>
