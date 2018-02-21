@@ -32,6 +32,15 @@ router.get('/autocomplete', (req, res, next) => {
 
     here.autocomplete(query)
         .then(r => {
+            let promises = []
+            //enrich with coordinates
+            r.suggestions.forEach(suggestion => {
+                promises.push(here.enrichWithGeoCode(suggestion))
+            })
+
+            return Promise.all(promises)
+        })
+        .then(r => {
             res.status(200).json( r ).send()
         })
         .catch(e => {
