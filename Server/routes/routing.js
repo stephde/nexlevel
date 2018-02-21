@@ -5,6 +5,9 @@ let router = express.Router();
 let Here = require('../components/here')
 let here = new Here()
 
+let NameGen = require('../components/nameGenerator')
+let nameGen = new NameGen()
+
 router.get('/', function (req, res, next) {
 
     const origin = req.query.origin;
@@ -37,7 +40,7 @@ router.get('/mock', (req, res, next) => {
         isLoading: false,
         connectionSegments: [
             {
-                name: "Jacky",
+                name: nameGen.next(),
                 type: "BUS",
                 departureTime: {
                     h: 14,
@@ -59,7 +62,7 @@ router.get('/mock', (req, res, next) => {
                 }
             },
             {
-                name: "Paul",
+                name: nameGen.next(),
                 type: "BUS",
                 departureTime: {
                     h: 14,
