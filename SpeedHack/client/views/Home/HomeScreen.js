@@ -12,7 +12,7 @@ import {
 } from "native-base";
 import { StackNavigator } from "react-navigation"; // 1.0.0-beta.14
 
-import RouteView from "../RegisterView";
+import RouteView from "../Route/RouteView";
 import styles from "./styles";
 
 const HomeScreen = ({ navigation }) => (
