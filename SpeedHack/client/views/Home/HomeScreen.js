@@ -18,6 +18,7 @@ import RouteView from "../Route/RouteView";
 import styles from "./styles";
 
 import busImage from "./bus.png";
+import skyline from "./skyline.jpg";
 
 const HomeScreen = ({ navigation }) => (
   <Container
@@ -27,20 +28,37 @@ const HomeScreen = ({ navigation }) => (
       justifyContent: "center"
     }}
   >
+    <Image
+      style={{
+        backgroundColor: "#ccc",
+        resizeMode: "cover",
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        justifyContent: "center"
+      }}
+      source={skyline}
+    />
+    <View
+      style={{
+        backgroundColor: "#fff",
+        opacity: 0.7,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%"
+      }}
+    />
     <Content
       contentContainerStyle={{
         flex: 1,
         flexDirection: "column",
-        justifyContent: "center"
+        justifyContent: "space-between"
       }}
     >
-      <Image
-        source={busImage}
-        style={{
-          width: "100%",
-          resizeMode: "contain"
-        }}
-      />
       <Form>
         <Item floatingLabel style={{ margin: "5%" }}>
           <Label>From</Label>
@@ -48,13 +66,32 @@ const HomeScreen = ({ navigation }) => (
           <Icon active name="ios-bus-outline" />
         </Item>
       </Form>
-      <Button
-        onPress={() => navigation.navigate("Route")}
-        block
-        style={{ margin: "5%" }}
+      <View
+        style={{
+          width: "90%",
+          margin: "5%",
+          height: 70,
+          flexDirection: "row",
+          justifyContent: "center"
+        }}
       >
-        <Text>Go</Text>
-      </Button>
+        <Button
+          onPress={() =>
+            navigation.navigate("Route", {
+              from: { lat: 0, long: 0 },
+              to: { lat: 0, long: 0 }
+            })
+          }
+          bordered
+          style={{
+            borderRadius: 100,
+            width: 70,
+            height: 70
+          }}
+        >
+          <Text style={{ textAlign: "center", width: "100%" }}>Go</Text>
+        </Button>
+      </View>
     </Content>
   </Container>
 );

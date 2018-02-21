@@ -1461,11 +1461,10 @@ function NameGenerator () {
         'Pennant-winged night jar',
         'Jabiru',
         'Red mullet fish'
-    ]
+    ].filter(term => term.indexOf(' ') === -1)
 
     function randomAnimal() {
         const index = Math.floor((Math.random() * animals.length))
-
         return animals[index]
     }
 
@@ -1482,10 +1481,7 @@ function NameGenerator () {
 
     this.next = function () {
         const animal = randomAnimal()
-
-        const funkyName = randomAdjective(animal) + ' ' + animal
-
-        return funkyName
+        return randomAdjective(animal) + ' ' + animal
     }
 }
 
