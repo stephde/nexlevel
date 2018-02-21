@@ -57,6 +57,7 @@ export default class Map extends React.Component {
       >
         {this.props.markers.map((marker, index) => (
           <MapView.Marker
+            key={marker.name}
             coordinate={marker.coordinate}
             title={marker.name}
             onPress={() => this.selectMarker(index)}
