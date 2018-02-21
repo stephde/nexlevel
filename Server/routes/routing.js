@@ -1,6 +1,7 @@
 let express = require('express');
 let router = express.Router();
 // var passport = require('passport');
+const uuidv1 = require('uuid/v1');
 
 let Here = require('../components/here')
 let here = new Here()
@@ -13,10 +14,14 @@ const mapHereTransportMean = {
     busPublic: 'Bus'
 }
 
+let requestCache = []
+
 router.get('/', function (req, res, next) {
 
     const origin = req.query.origin;
     const destination = req.query.destination;
+
+    cacheRequest(origin, destination)
 
     here.getRoute(origin, destination)
         .then(result => {
@@ -27,10 +32,41 @@ router.get('/', function (req, res, next) {
         })
 });
 
+router.get('/requests', function (req, res, next) {
+    res.status(200).json(requestCache).send()
+})
+
+router.post('/requests', function (req, res, next) {
+    let requests = req.body.requests
+
+    if(requests.length > 0)
+        requestCache = req.body.requests
+
+    res.sendStatus(200)
+})
+
+router.post('/request', function (req, res, next) {
+    const origin = req.body.params.origin;
+    const destination = req.body.params.destination;
+
+    cacheRequest(origin, destination)
+
+    res.sendStatus(200)
+})
+
 router.get('/autocomplete', (req, res, next) => {
     const query = req.query.query
 
     here.autocomplete(query)
+        .then(r => {
+            let promises = []
+            //enrich with coordinates
+            r.suggestions.forEach(suggestion => {
+                promises.push(here.enrichWithGeoCode(suggestion))
+            })
+
+            return Promise.all(promises)
+        })
         .then(r => {
             res.status(200).json( r ).send()
         })
@@ -48,6 +84,8 @@ router.get('/mockdynamic', (req, res, next) => {
     const origin = req.query.origin || [52.485617,13.3636133];
     const originName = req.query.originName || "U-Bahnhof Bülowstraße"
     const destination = req.query.destination || [52.4986868,13.3728273];
+
+    cacheRequest(origin, destination)
 
     here.getRoute(origin, destination)
         .then(result => {
@@ -130,6 +168,15 @@ function getMockRoute() {
 
 function getMockSegment() {
     return Object.assign({}, getMockRoute().connectionSegments[0])
+}
+
+function cacheRequest(from, to) {
+    requestCache.push({
+        id: uuidv1(),
+        timestamp: Date.now(),
+        from: from,
+        to: to
+    })
 }
 
 module.exports = router;

@@ -65,6 +65,23 @@ function Here () {
         return getUrl(url, params).then(r => r.data.Response).catch(e => console.log(e))
     }
 
+    this.enrichWithGeoCode = function (location) {
+        return this.geocode(location.label)
+            .then(result => {
+                let coords = result.View[0].Result[0].Location.DisplayPosition
+
+                return {
+                    latitude: coords.Latitude,
+                    longitude: coords.Longitude
+                }
+            })
+            .then(coords => {
+                console.log(coords)
+                location.coordinates = coords
+                return location
+            })
+    }
+
     return this
 }
 
