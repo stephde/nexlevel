@@ -2,7 +2,7 @@ let axios = require('axios')
 
 function Here () {
     const url = "https://route.api.here.com/"
-    //ToDo: add actual api credentials
+
     const apiKey = {
         app_id: process.env.HERE_APP_ID,
         app_code: process.env.HERE_APP_CODE
@@ -17,13 +17,22 @@ function Here () {
         })
     }
 
+    function getCIT(path, params) {
+        Object.assign(params, apiKey)
+        const url = "http://autocomplete.geocoder.cit.api.here.com/"
+
+        return axios.get(url + path, {
+            params: params
+        })
+    }
+
     this.getRoute = function (origin, destination) {
 
         return get("routing/7.2/calculateroute.json", {
             //ToDo: verify parameters
                 waypoint0: 'geo!' + origin.toString(),
                 waypoint1: 'geo!' + destination.toString(),
-                mode: "fastest;car;traffic:disabled"
+                mode: "fastest;publicTransport;traffic:disabled"
             })
             .then(response => {
                 return response.data.response
@@ -31,6 +40,14 @@ function Here () {
             .catch(error => {
                 console.log(error);
             });
+    }
+
+    this.autocomplete = function (substr) {
+        // http://autocomplete.geocoder.cit.api.here.com/
+        return getCIT("6.2/suggest.json", {
+            query: substr,
+            prox: '52.4986868,13.3728273',
+        }).then(r => r.data).catch(e => console.log(e))
     }
 
     return this
