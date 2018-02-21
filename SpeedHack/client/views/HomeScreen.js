@@ -8,12 +8,9 @@ import {
   Component,
   AsyncStorage
 } from "react-native";
-import { Button, Icon } from "native-base";
 import { StackNavigator } from "react-navigation"; // 1.0.0-beta.14
 
-import RegisterView from "./RegisterView";
-import LoginView from "./LoginView";
-import ProtectedView from "./ProtectedView";
+import RouteView from "./RegisterView";
 import Test from "./Test";
 
 _handleLogOut = () => {
@@ -23,81 +20,32 @@ _handleLogOut = () => {
 
 const HomeScreen = ({ navigation }) => (
   <View style={styles.container}>
-    <TouchableHighlight onPress={() => navigation.navigate("Register")}>
-      <Text style={[styles.button, styles.blueButton]}>Register</Text>
-    </TouchableHighlight>
-    <Button transparent>
-      <Icon name="menu" />
-    </Button>
-    <TouchableHighlight onPress={() => navigation.navigate("Login")}>
-      <Text style={[styles.button, styles.greenButton]}>Log Out Yeah</Text>
-    </TouchableHighlight>
-    <TouchableHighlight onPress={this._handleLogOut}>
-      <Text style={[styles.button, styles.greyButton]}>Log Out</Text>
-    </TouchableHighlight>
-    <TouchableHighlight onPress={() => navigation.navigate("Protected")}>
-      <Text style={[styles.button, styles.redButton]}>Protected Content</Text>
+    <TouchableHighlight onPress={() => navigation.navigate("Route")}>
+      <Text style={[styles.button, styles.blueButton]}>Go</Text>
     </TouchableHighlight>
   </View>
 );
 
-const RegisterScreen = () => <RegisterApp />;
-
-const LoginScreen = () => <LoginApp />;
-
-const ProtectedScreen = () => <ProtectedApp />;
+const RouteScreen = () => <RouteApp />;
 
 const RootNavigator = StackNavigator({
   Home: {
     screen: HomeScreen,
     navigationOptions: {
-      title: "Welcome to SpeedHackApp"
+      title: "Welcome to nexLevel Mobility"
     }
   },
-
-  Register: {
-    screen: RegisterScreen,
-    navigationOptions: {
-      headerTitle: "Register"
-    }
-  },
-
-  Login: {
-    screen: LoginScreen,
+  Route: {
+    screen: RouteScreen,
     navigationOptions: {
       headerTitle: "Login"
-    }
-  },
-
-  Protected: {
-    screen: ProtectedScreen,
-    navigationOptions: {
-      headerTitle: "Protected"
     }
   }
 });
 
-const RegisterApp = StackNavigator(
+const RouteApp = StackNavigator(
   {
-    Register: { screen: RegisterView }
-  },
-  {
-    headerMode: "none"
-  }
-);
-
-const LoginApp = StackNavigator(
-  {
-    Login: { screen: LoginView }
-  },
-  {
-    headerMode: "none"
-  }
-);
-
-const ProtectedApp = StackNavigator(
-  {
-    Protected: { screen: ProtectedView }
+    Route: { screen: RouteView }
   },
   {
     headerMode: "none"
