@@ -26,6 +26,7 @@
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^4.0.0",
     "serve-favicon": "~2.3.0",
-    "tcomb-form-native": "^0.4.4"
+    "tcomb-form-native": "^0.4.4",
+    "uuid": "^3.2.1"
   }
 }

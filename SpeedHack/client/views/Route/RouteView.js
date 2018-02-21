@@ -31,10 +31,16 @@ class RouteView extends React.Component {
   }
   _generateHeadline(segment) {
     switch (segment.type) {
-      case "BUS":
+      case "Bus":
         return `Go by bus with ${segment.name} :)`;
-      case "WALK":
+      case "UBahn":
+        return `Take the U-Bahn`;
+      case "SBahn":
+        return `Take the S-Bahn`;
+      case "Walk":
         return `Walk`;
+      default:
+        return segment.type;
     }
   }
   _getTimeString({ h, min }) {
@@ -67,7 +73,11 @@ class RouteView extends React.Component {
 
   render() {
     const { isLoading, connectionSegments } = this.state;
-
+    const coordinates = [
+      { latitude: 52.490396, longitude: 13.360399 },
+      { latitude: 52.523374, longitude: 13.411157 },
+      { latitude: 52.543443, longitude: 13.425288 }
+    ];
     return (
       <Container>
         <Content>
@@ -98,12 +108,28 @@ class RouteView extends React.Component {
                   height: 250
                 }}
                 initialRegion={{
-                  latitude: 37.78825,
-                  longitude: -122.4324,
+                  ...coordinates[0],
                   latitudeDelta: 0.0922,
                   longitudeDelta: 0.0421
                 }}
-              />
+              >
+                <MapView.Polyline
+                  coordinates={coordinates}
+                  strokeColor="#12D" // fallback for when `strokeColors` is not supported by the map-provider
+                  strokeColors={["#7F0000", "#B24112", "#E5845C"]}
+                  strokeWidth={2}
+                  lineCap="butt"
+                />
+                {coordinates.map(coordinate => (
+                  <MapView.Circle
+                    center={coordinate}
+                    radius={5}
+                    fillColor="#12D"
+                    strokeColor="#12D"
+                    key={`${coordinate.latitude}-${coordinate.longitude}`}
+                  />
+                ))}
+              </MapView>
             </View>
           )}
         </Content>

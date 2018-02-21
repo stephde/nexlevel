@@ -1,34 +1,32 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-var passport = require('passport');
+let express = require('express');
+let path = require('path');
+let favicon = require('serve-favicon');
+let logger = require('morgan');
+let cookieParser = require('cookie-parser');
+let bodyParser = require('body-parser');
+let mongoose = require('mongoose');
+let passport = require('passport');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
+let index = require('./routes/index');
 let routing = require('./routes/routing')
+let users = require('./routes/users');
 
-var LocalStrategy = require('passport-local').Strategy;
-var JwtStrategy = require('passport-jwt').Strategy;
+let LocalStrategy = require('passport-local').Strategy;
+let JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const User = require('./models/user');
-var routes = require('./routes/index');
-var users = require('./routes/users');
 
-var app = express();
+let app = express();
 
 // connect to database
-var db = process.env.MONGO_URL || 'localhost/react-native-jwt'
+let db = process.env.MONGO_URL || 'localhost/react-native-jwt'
 mongoose.connect(db);
 mongoose.connection.on('error', function() {
     console.info('Error: Could not connect to MongoDB. Did you forget to run `mongod`?')
 });
 
 // JWT configuration
- var options = {}
+ let options = {}
  options.jwtFromRequest = ExtractJwt.fromAuthHeader();
  options.secretOrKey = '7x0jhxt&quot;9(thpX6'
 
@@ -69,7 +67,7 @@ app.use('/routing', routing)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  let err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
