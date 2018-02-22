@@ -42,8 +42,8 @@ function promisedTimeout(ms) {
 }
 
 async function run() {
-  const numOfRequest = 5;
-  const delayInMs = 100;
+  const numOfRequest = 100;
+  const delayInMs = 500;
 
   let promises = [];
   for (let i = 0; i < numOfRequest; i++) {

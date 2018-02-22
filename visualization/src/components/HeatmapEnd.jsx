@@ -26,6 +26,10 @@ export default class Heatmap extends React.Component {
           new window.google.maps.LatLng({
             lat: request.points[0][0],
             lng: request.points[0][1]
+          }),
+          new window.google.maps.LatLng({
+            lat: request.points[request.points.length - 1][0],
+            lng: request.points[request.points.length - 1][1]
           })
         ]
       )
@@ -42,7 +46,15 @@ export default class Heatmap extends React.Component {
       <HeatmapLayer
         data={this.state.data}
         options={{
-          radius: 50
+          radius: 50,
+          gradient: [
+            "#A7B2FF",
+            "#4D64FF",
+            "#394BBF",
+            "#27327F",
+            "#1D255F",
+            "#000000"
+          ]
         }}
       />
     );
