@@ -81,10 +81,10 @@ router.get('/mock', (req, res, next) => {
 
 router.get('/mockdynamic', (req, res, next) => {
 
-    const origin = req.query.origin || [52.485617,13.3636133];
+    const origin = JSON.parse(req.query.origin) || [52.485617,13.3636133]
     //ToDo: actually get real destination name !!!
     const destName = req.query.destName || "U-Bahnhof Bülowstraße"
-    const destination = req.query.destination || [52.4986868,13.3728273];
+    const destination = JSON.parse(req.query.destination) || [52.4986868,13.3728273]
 
     cacheRequest(origin, destination)
 
