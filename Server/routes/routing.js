@@ -86,8 +86,6 @@ router.get('/mockdynamic', (req, res, next) => {
     const destName = req.query.destName || "U-Bahnhof Bülowstraße"
     const destination = JSON.parse(req.query.destination) || [52.4986868,13.3728273]
 
-    cacheRequest(origin, destination)
-
     here.getRoute(origin, destination)
         .then(result => {
             let route = result.route[0]
@@ -121,6 +119,8 @@ router.get('/mockdynamic', (req, res, next) => {
                     }
                 }
             })
+
+            cacheRequest(origin, segments)
 
             return {
                 connectionSegments: segments,
@@ -186,12 +186,11 @@ function getMockSegment() {
     return Object.assign({}, getMockRoute().connectionSegments[0])
 }
 
-function cacheRequest(from, to) {
+function cacheRequest(start, segments) {
     requestCache.push({
         id: uuidv1(),
         timestamp: Date.now(),
-        from: from,
-        to: to
+        points: [start].concat(segments.map(s => [s.arrivalLocation.latitude, s.arrivalLocation.longitude]))
     })
 }
 
