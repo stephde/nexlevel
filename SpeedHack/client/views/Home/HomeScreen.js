@@ -33,7 +33,6 @@ class HomeScreen extends React.Component {
   }
   onChange(value) {
     getPossibleLocations(value).then(suggestions => {
-      console.log(suggestions);
       this.setState({
         suggestions: suggestions.map(suggestion => {
           return {
@@ -132,7 +131,7 @@ class HomeScreen extends React.Component {
           />
           <Form>
             <Item floatingLabel style={{ margin: "5%" }}>
-              <Label>From</Label>
+              <Label>Destination</Label>
               <Input
                 onChangeText={value => this.onChange(value)}
                 onFocus={() => this.onFocus()}
@@ -169,8 +168,6 @@ class HomeScreen extends React.Component {
     );
   }
 }
-const RouteScreen = () => <RouteApp />;
-
 const RootNavigator = StackNavigator({
   Home: {
     screen: HomeScreen,
@@ -180,20 +177,11 @@ const RootNavigator = StackNavigator({
     }
   },
   Route: {
-    screen: RouteScreen,
+    screen: RouteView,
     navigationOptions: {
       headerTitle: "Your Route"
     }
   }
 });
-
-const RouteApp = StackNavigator(
-  {
-    Route: { screen: RouteView }
-  },
-  {
-    headerMode: "none"
-  }
-);
 
 export default RootNavigator;
