@@ -7,6 +7,8 @@ import {
   Marker
 } from "react-google-maps";
 
+import Heatmap from "./Heatmap";
+
 class Map extends Component {
   render() {
     // center the map somewhere in London
@@ -21,6 +23,7 @@ class Map extends Component {
         defaultCenter={{ lat: 52.518248, lng: 13.396607 }}
         defaultOptions={{ styles: mapOptions }}
       >
+        <Heatmap />
         <Marker position={{ lat: 52.518248, lng: 13.396607 }} />
       </GoogleMap>
     );
@@ -30,7 +33,7 @@ class Map extends Component {
 export default compose(
   withProps({
     googleMapURL:
-      "https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places",
+      "https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places,visualization",
     loadingElement: <div style={{ height: `100%` }} />,
     containerElement: <div style={{ height: `100vh` }} />,
     mapElement: <div style={{ height: `100%` }} />
