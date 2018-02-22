@@ -23,6 +23,7 @@
     "jsonwebtoken": "^6.2.0",
     "mongoose": "^4.4.16",
     "morgan": "~1.6.1",
+    "multivariate-normal": "^0.1.1",
     "passport": "^0.3.2",
     "passport-jwt": "^2.0.0",
     "passport-local": "^1.0.0",
