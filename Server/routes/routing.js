@@ -155,7 +155,7 @@ function getMockRoute() {
     return {
         connectionSegments: [
             {
-                name: nameGen.next(),
+                name: nameGen.getBoringName(),
                 type: "Bus",
                 departureTime: {
                     h: 14,
@@ -164,7 +164,7 @@ function getMockRoute() {
                 departureName: "U-Bahnhof Bülowstraße",
                 departureLocation: {
                     latitude: "",
-                    longitute: ""
+                    longitude: ""
                 },
                 arrivalTime: {
                     h: 14,
@@ -173,11 +173,11 @@ function getMockRoute() {
                 arrivalName: "Alexanderplatz",
                 arrivalLocation: {
                     latitude: "",
-                    longitute: ""
+                    longitude: ""
                 }
             },
             {
-                name: nameGen.next(),
+                name: nameGen.getBoringName(),
                 type: "Bus",
                 departureTime: {
                     h: 14,
@@ -186,7 +186,7 @@ function getMockRoute() {
                 departureName: "Alexanderplatz",
                 departureLocation: {
                     latitude: "",
-                    longitute: ""
+                    longitude: ""
                 },
                 arrivalTime: {
                     h: 14,
@@ -195,7 +195,7 @@ function getMockRoute() {
                 arrivalName: "Storkower Straße",
                 arrivalLocation: {
                     latitude: "",
-                    longitute: ""
+                    longitude: ""
                 }
             }
         ]

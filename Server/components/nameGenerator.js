@@ -1,4 +1,4 @@
-
+const dogNames = require('dog-names')
 function NameGenerator () {
 
     const adjective = [
@@ -1364,6 +1364,10 @@ function NameGenerator () {
     this.next = function () {
         const animal = randomAnimal()
         return randomAdjective(animal) + ' ' + animal
+    }
+
+    this.getBoringName = function () {
+        return dogNames.allRandom()
     }
 }
 
