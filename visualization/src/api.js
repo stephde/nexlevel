@@ -1,5 +1,5 @@
 // Installs fetch as global function (can be mocked)
-// import "isomorphic-fetch";
+import "isomorphic-fetch";
 
 // const API_URL = "https://nexlevel-server.herokuapp.com/routing/";
 const API_URL = "https://inquisitive-witness.glitch.me/routing/";
@@ -48,5 +48,4 @@ const fetchJson = (
   );
 };
 
-export const getPossibleLocations = location =>
-  fetchJson(API_URL + "autocomplete?query=" + location);
+export const getRequestedLocations = () => fetchJson(API_URL + "requests");

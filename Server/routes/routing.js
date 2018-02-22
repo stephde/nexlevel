@@ -25,15 +25,15 @@ router.get('/', function (req, res, next) {
 
     here.getRoute(origin, destination)
         .then(result => {
-            res.status(200).json({ route: result }).send()
+            res.status(200).send({ route: result })
         })
         .catch(err => {
-            res.status(500).json({error: err}).send()
+            res.status(500).send({error: err})
         })
 });
 
 router.get('/requests', function (req, res, next) {
-    res.status(200).json(requestCache).send()
+    res.status(200).send(requestCache)
 })
 
 router.post('/requests', function (req, res, next) {
@@ -68,10 +68,10 @@ router.get('/autocomplete', (req, res, next) => {
             return Promise.all(promises)
         })
         .then(r => {
-            res.status(200).json( r ).send()
+            res.status(200).send( r )
         })
         .catch(e => {
-            res.status(500).json({ error: e }).send()
+            res.status(500).send({ error: e })
         })
 })
 
@@ -81,12 +81,10 @@ router.get('/mock', (req, res, next) => {
 
 router.get('/mockdynamic', (req, res, next) => {
 
-    const origin = req.query.origin || [52.485617,13.3636133];
+    const origin = req.query.origin ? JSON.parse(req.query.origin) : [52.485617,13.3636133]
     //ToDo: actually get real destination name !!!
     const destName = req.query.destName || "U-Bahnhof Bülowstraße"
-    const destination = req.query.destination || [52.4986868,13.3728273];
-
-    cacheRequest(origin, destination)
+    const destination = req.query.destination ? JSON.parse(req.query.destination) : [52.4986868,13.3728273]
 
     here.getRoute(origin, destination)
         .then(result => {
@@ -95,10 +93,9 @@ router.get('/mockdynamic', (req, res, next) => {
             let maneuvers = route.leg[0].maneuver
                 .filter(m => m._type === 'PublicTransportManeuverType')
                 .filter((_, i) => i % 2 === 0)
-                .map((e, i) => ({
-                    ...e,
-                    ...route.publicTransportLine[i],
-                }))
+                .map((e, i) => {
+                    return Object.assign({}, e, route.publicTransportLine[i])
+                })
 
             let segments = maneuvers.map((maneuver) => {
                 let segment = getMockSegment()
@@ -112,7 +109,6 @@ router.get('/mockdynamic', (req, res, next) => {
 
             segments.forEach((segment, index) => {
                 if(index < (segments.length - 1)) {
-                    console.log("Set arrival name and location")
                     segment.arrivalName = segments[index+1].departureName
                     segment.arrivalLocation = segments[index+1].departureLocation
                 } else {
@@ -124,13 +120,15 @@ router.get('/mockdynamic', (req, res, next) => {
                 }
             })
 
+            cacheRequest(origin, segments)
+
             return {
                 connectionSegments: segments,
                 totalTime: Math.floor(route.summary.travelTime / 60)
             }
         })
-        .then(result => res.status(200).json(result))
-        .catch(e => res.status(500).json({error: e}).send())
+        .then(result => res.status(200).send(result))
+        .catch(e => res.status(500).send({error: e}))
 })
 
 function getMockRoute() {
@@ -188,12 +186,11 @@ function getMockSegment() {
     return Object.assign({}, getMockRoute().connectionSegments[0])
 }
 
-function cacheRequest(from, to) {
+function cacheRequest(start, segments) {
     requestCache.push({
         id: uuidv1(),
         timestamp: Date.now(),
-        from: from,
-        to: to
+        points: [start].concat(segments.map(s => [s.arrivalLocation.latitude, s.arrivalLocation.longitude]))
     })
 }
 
