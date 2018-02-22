@@ -2,6 +2,7 @@ let axios = require('axios')
 
 const host = 'http://localhost:3000'
 const remoteHost = 'https://nexlevel-server.herokuapp.com'
+const remoteGlitch = 'https://inquisitive-witness.glitch.me'
 const path = '/routing/request'
 
 const lat = {
@@ -43,7 +44,7 @@ async function run() {
 
     let promises = []
     for (let i = 0; i < numOfRequest; i++) {
-        promises.push(axios.post(remoteHost + path, {
+        promises.push(axios.post(remoteGlitch + path, {
             params: {
                 origin: getNextCoordinate(),
                 destination: getNextCoordinate()
@@ -54,7 +55,7 @@ async function run() {
     }
 
     Promise.all(promises)
-        .then(() => console.log("Sent " + numOfRequest + " requests to " + remoteHost + path))
+        .then(() => console.log("Sent " + numOfRequest + " requests to " + remoteGlitch + path))
         .catch(console.log)
 }
 
