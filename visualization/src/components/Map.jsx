@@ -8,6 +8,7 @@ import {
 } from "react-google-maps";
 
 import Heatmap from "./Heatmap";
+import Route from "./Route";
 
 class Map extends Component {
   render() {
@@ -24,6 +25,18 @@ class Map extends Component {
         defaultOptions={{ styles: mapOptions }}
       >
         <Heatmap />
+        <Route
+          points={[
+            {
+              lat: 52.485617,
+              lng: 13.3636133
+            },
+            {
+              lat: 52.4986868,
+              lng: 13.3728273
+            }
+          ]}
+        />
         <Marker position={{ lat: 52.518248, lng: 13.396607 }} />
       </GoogleMap>
     );
