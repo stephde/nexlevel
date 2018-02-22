@@ -132,7 +132,7 @@ class HomeScreen extends React.Component {
           />
           <Form>
             <Item floatingLabel style={{ margin: "5%" }}>
-              <Label>From</Label>
+              <Label>Destination</Label>
               <Input
                 onChangeText={value => this.onChange(value)}
                 onFocus={() => this.onFocus()}
