@@ -25,15 +25,15 @@ router.get('/', function (req, res, next) {
 
     here.getRoute(origin, destination)
         .then(result => {
-            res.status(200).json({ route: result }).send()
+            res.status(200).send({ route: result })
         })
         .catch(err => {
-            res.status(500).json({error: err}).send()
+            res.status(500).send({error: err})
         })
 });
 
 router.get('/requests', function (req, res, next) {
-    res.status(200).json(requestCache).send()
+    res.status(200).send(requestCache)
 })
 
 router.post('/requests', function (req, res, next) {
@@ -68,10 +68,10 @@ router.get('/autocomplete', (req, res, next) => {
             return Promise.all(promises)
         })
         .then(r => {
-            res.status(200).json( r ).send()
+            res.status(200).send( r )
         })
         .catch(e => {
-            res.status(500).json({ error: e }).send()
+            res.status(500).send({ error: e })
         })
 })
 
@@ -127,8 +127,8 @@ router.get('/mockdynamic', (req, res, next) => {
                 totalTime: Math.floor(route.summary.travelTime / 60)
             }
         })
-        .then(result => res.status(200).json(result))
-        .catch(e => res.status(500).json({error: e}).send())
+        .then(result => res.status(200).send(result))
+        .catch(e => res.status(500).send({error: e}))
 })
 
 function getMockRoute() {
