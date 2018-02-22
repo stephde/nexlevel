@@ -52,7 +52,7 @@ class RouteView extends React.Component {
 
   componentDidMount() {
     setTimeout(() => {
-      fetch("https://nexlevel-server.herokuapp.com/routing/mockdynamic")
+      fetch("https://inquisitive-witness.glitch.me/routing/mockdynamic")
         .then(response => response.json())
         .then(json =>
           this.setState({
