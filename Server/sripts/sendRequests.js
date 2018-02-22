@@ -2,7 +2,8 @@ let axios = require("axios");
 
 const host = "http://localhost:3000";
 const remoteHost = "https://nexlevel-server.herokuapp.com";
-const path = "/routing/request";
+const remoteGlitch = "https://inquisitive-witness.glitch.me";
+const path = "/routing/mockdynamic";
 
 const lat = {
   min: 13.30782,
@@ -22,11 +23,16 @@ function getNextCoordinate() {
   const longNachkomma = longBase + Math.floor(Math.random() * longDiff);
 
   //ToDo: get max and min coordinates for berlin and randomize
-  return {
-    //ToDo: is this the right oder?
-    longitude: parseFloat("13." + latNachkomma.toString()),
-    latitude: parseFloat("52." + longNachkomma.toString())
-  };
+  coords = [
+    parseFloat("52." + longNachkomma.toString()),
+    parseFloat("13." + latNachkomma.toString())
+  ];
+  return "[" + coords.toString() + "]";
+  // return {
+  //     //ToDo: is this the right oder?
+  //     longitude: parseFloat("13." + latNachkomma.toString()),
+  //     latitude: parseFloat("52." + longNachkomma.toString())
+  // }
 }
 
 function promisedTimeout(ms) {
@@ -37,12 +43,12 @@ function promisedTimeout(ms) {
 
 async function run() {
   const numOfRequest = 5;
-  const delayInMs = 2000;
+  const delayInMs = 100;
 
   let promises = [];
   for (let i = 0; i < numOfRequest; i++) {
     promises.push(
-      axios.post(remoteHost + path, {
+      axios.get(remoteGlitch + path, {
         params: {
           origin: getNextCoordinate(),
           destination: getNextCoordinate()
@@ -55,7 +61,9 @@ async function run() {
 
   Promise.all(promises)
     .then(() =>
-      console.log("Sent " + numOfRequest + " requests to " + remoteHost + path)
+      console.log(
+        "Sent " + numOfRequest + " requests to " + remoteGlitch + path
+      )
     )
     .catch(console.log);
 }

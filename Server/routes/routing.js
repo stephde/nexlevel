@@ -14,6 +14,8 @@ const mapHereTransportMean = {
     busPublic: 'Bus'
 }
 
+const ONE_MINUTE = 60000
+
 let requestCache = []
 
 router.get('/', function (req, res, next) {
@@ -81,14 +83,15 @@ router.get('/mock', (req, res, next) => {
 
 router.get('/mockdynamic', (req, res, next) => {
 
-    const origin = JSON.parse(req.query.origin) || [52.485617,13.3636133]
+    const origin = req.query.origin ? JSON.parse(req.query.origin) : [52.485617,13.3636133]
     //ToDo: actually get real destination name !!!
     const destName = req.query.destName || "U-Bahnhof Bülowstraße"
-    const destination = JSON.parse(req.query.destination) || [52.4986868,13.3728273]
+    const destination = req.query.destination ? JSON.parse(req.query.destination) : [52.4986868,13.3728273]
 
     here.getRoute(origin, destination)
         .then(result => {
             let route = result.route[0]
+            let runningTime = Date.now()
 
             let maneuvers = route.leg[0].maneuver
                 .filter(m => m._type === 'PublicTransportManeuverType')
@@ -100,17 +103,34 @@ router.get('/mockdynamic', (req, res, next) => {
             let segments = maneuvers.map((maneuver) => {
                 let segment = getMockSegment()
 
-                segment.departureName = maneuver.stopName
-                segment.departureLocation = maneuver.position
                 segment.type = mapHereTransportMean[maneuver.type] || maneuver.type
+                segment.departureLocation = maneuver.position
+                segment.travelDuration = maneuver.travelTime
+                segment.departureName = maneuver.stopName
+                segment.departureDate = new Date(runningTime + ONE_MINUTE)
+                segment.departureTime = {
+                    h: timeZonedHours(segment.departureDate),
+                    min: segment.departureDate.getMinutes()
+                }
+
+                if(maneuver.travelTime)
+                    runningTime += maneuver.travelTime * 1000
+
+
+                segment.arrivalDate = new Date(runningTime)
+                segment.arrivalTime = {
+                    h: timeZonedHours(segment.arrivalDate),
+                    min: segment.arrivalDate.getMinutes()
+                }
 
                 return segment
             })
 
             segments.forEach((segment, index) => {
                 if(index < (segments.length - 1)) {
-                    segment.arrivalName = segments[index+1].departureName
-                    segment.arrivalLocation = segments[index+1].departureLocation
+                    const nextSeg = segments[index+1]
+                    segment.arrivalName = nextSeg.departureName
+                    segment.arrivalLocation = nextSeg.departureLocation
                 } else {
                     segment.arrivalName = destName
                     segment.arrivalLocation = {
@@ -192,6 +212,15 @@ function cacheRequest(start, segments) {
         timestamp: Date.now(),
         points: [start].concat(segments.map(s => [s.arrivalLocation.latitude, s.arrivalLocation.longitude]))
     })
+}
+
+function timeZonedHours(date) {
+    let germanhours = date.getUTCHours() + 1
+
+    if(germanhours > 23)
+        return 0
+
+    return germanhours
 }
 
 module.exports = router;
