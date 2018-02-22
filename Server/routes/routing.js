@@ -14,6 +14,8 @@ const mapHereTransportMean = {
     busPublic: 'Bus'
 }
 
+const ONE_MINUTE = 60000
+
 let requestCache = []
 
 router.get('/', function (req, res, next) {
@@ -89,6 +91,7 @@ router.get('/mockdynamic', (req, res, next) => {
     here.getRoute(origin, destination)
         .then(result => {
             let route = result.route[0]
+            let runningTime = Date.now()
 
             let maneuvers = route.leg[0].maneuver
                 .filter(m => m._type === 'PublicTransportManeuverType')
@@ -100,17 +103,34 @@ router.get('/mockdynamic', (req, res, next) => {
             let segments = maneuvers.map((maneuver) => {
                 let segment = getMockSegment()
 
-                segment.departureName = maneuver.stopName
-                segment.departureLocation = maneuver.position
                 segment.type = mapHereTransportMean[maneuver.type] || maneuver.type
+                segment.departureLocation = maneuver.position
+                segment.travelDuration = maneuver.travelTime
+                segment.departureName = maneuver.stopName
+                segment.departureDate = new Date(runningTime + ONE_MINUTE)
+                segment.departureTime = {
+                    h: timeZonedHours(segment.departureDate),
+                    min: segment.departureDate.getMinutes()
+                }
+
+                if(maneuver.travelTime)
+                    runningTime += maneuver.travelTime * 1000
+
+
+                segment.arrivalDate = new Date(runningTime)
+                segment.arrivalTime = {
+                    h: timeZonedHours(segment.arrivalDate),
+                    min: segment.arrivalDate.getMinutes()
+                }
 
                 return segment
             })
 
             segments.forEach((segment, index) => {
                 if(index < (segments.length - 1)) {
-                    segment.arrivalName = segments[index+1].departureName
-                    segment.arrivalLocation = segments[index+1].departureLocation
+                    const nextSeg = segments[index+1]
+                    segment.arrivalName = nextSeg.departureName
+                    segment.arrivalLocation = nextSeg.departureLocation
                 } else {
                     segment.arrivalName = destName
                     segment.arrivalLocation = {
@@ -135,7 +155,7 @@ function getMockRoute() {
     return {
         connectionSegments: [
             {
-                name: nameGen.next(),
+                name: nameGen.getBoringName(),
                 type: "Bus",
                 departureTime: {
                     h: 14,
@@ -144,7 +164,7 @@ function getMockRoute() {
                 departureName: "U-Bahnhof Bülowstraße",
                 departureLocation: {
                     latitude: "",
-                    longitute: ""
+                    longitude: ""
                 },
                 arrivalTime: {
                     h: 14,
@@ -153,11 +173,11 @@ function getMockRoute() {
                 arrivalName: "Alexanderplatz",
                 arrivalLocation: {
                     latitude: "",
-                    longitute: ""
+                    longitude: ""
                 }
             },
             {
-                name: nameGen.next(),
+                name: nameGen.getBoringName(),
                 type: "Bus",
                 departureTime: {
                     h: 14,
@@ -166,7 +186,7 @@ function getMockRoute() {
                 departureName: "Alexanderplatz",
                 departureLocation: {
                     latitude: "",
-                    longitute: ""
+                    longitude: ""
                 },
                 arrivalTime: {
                     h: 14,
@@ -175,7 +195,7 @@ function getMockRoute() {
                 arrivalName: "Storkower Straße",
                 arrivalLocation: {
                     latitude: "",
-                    longitute: ""
+                    longitude: ""
                 }
             }
         ]
@@ -192,6 +212,15 @@ function cacheRequest(start, segments) {
         timestamp: Date.now(),
         points: [start].concat(segments.map(s => [s.arrivalLocation.latitude, s.arrivalLocation.longitude]))
     })
+}
+
+function timeZonedHours(date) {
+    let germanhours = date.getUTCHours() + 1
+
+    if(germanhours > 23)
+        return 0
+
+    return germanhours
 }
 
 module.exports = router;
