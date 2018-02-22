@@ -89,6 +89,7 @@ router.get('/mockdynamic', (req, res, next) => {
     here.getRoute(origin, destination)
         .then(result => {
             let route = result.route[0]
+            let runningTime = Date.now()
 
             let maneuvers = route.leg[0].maneuver
                 .filter(m => m._type === 'PublicTransportManeuverType')
@@ -100,9 +101,14 @@ router.get('/mockdynamic', (req, res, next) => {
             let segments = maneuvers.map((maneuver) => {
                 let segment = getMockSegment()
 
-                segment.departureName = maneuver.stopName
-                segment.departureLocation = maneuver.position
                 segment.type = mapHereTransportMean[maneuver.type] || maneuver.type
+                segment.departureLocation = maneuver.position
+                segment.travelDuration = maneuver.travelTime
+                segment.departureName = maneuver.stopName
+                segment.departureTime = runningTime
+
+                if(maneuver.travelTime)
+                    runningTime += maneuver.travelTime * 1000
 
                 return segment
             })
