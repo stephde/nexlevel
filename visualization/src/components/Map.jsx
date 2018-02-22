@@ -7,10 +7,28 @@ import {
   Marker
 } from "react-google-maps";
 
+import { getRequestedLocations } from "../api";
 import Heatmap from "./Heatmap";
-import Route from "./Route";
+import Connections from "./Connections";
 
 class Map extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      requests: []
+    };
+  }
+  componentDidMount() {
+    setInterval(() => {
+      getRequestedLocations().then(requests => {
+        this.setState({
+          requests: requests.filter(
+            request => Date.now() - request.timestamp < 600000
+          )
+        });
+      });
+    }, 1000);
+  }
   render() {
     // center the map somewhere in London
     const center = {
@@ -20,23 +38,12 @@ class Map extends Component {
 
     return (
       <GoogleMap
-        defaultZoom={12}
+        defaultZoom={13}
         defaultCenter={{ lat: 52.518248, lng: 13.396607 }}
         defaultOptions={{ styles: mapOptions }}
       >
-        <Heatmap />
-        <Route
-          points={[
-            {
-              lat: 52.485617,
-              lng: 13.3636133
-            },
-            {
-              lat: 52.4986868,
-              lng: 13.3728273
-            }
-          ]}
-        />
+        <Heatmap requests={this.state.requests} />
+        <Connections />
         <Marker position={{ lat: 52.518248, lng: 13.396607 }} />
       </GoogleMap>
     );

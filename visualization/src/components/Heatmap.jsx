@@ -11,22 +11,33 @@ export default class Heatmap extends React.Component {
     };
   }
 
-  componentDidMount() {
-    getRequestedLocations()
-      .then(requests => {
-        const latLngArray = requests.map(
-          request =>
-            new window.google.maps.LatLng({
-              lat: request.from[0],
-              lng: request.from[1]
-            })
-        );
-        console.log(latLngArray);
-        this.setState({
-          data: latLngArray
-        });
-      })
-      .catch(error => console.log);
+  componentWillReceiveProps(nextProps) {
+    // if (nextProps.requests.length > this.props.requests.length) {
+    const latLngArray = nextProps.requests
+      .map(request =>
+        // request.points.map(
+        //   point =>
+        //     new window.google.maps.LatLng({
+        //       lat: point[0],
+        //       lng: point[1]
+        //     })
+        // )
+        [
+          new window.google.maps.LatLng({
+            lat: request.points[0][0],
+            lng: request.points[0][1]
+          }),
+          new window.google.maps.LatLng({
+            lat: request.points[request.points.length - 1][0],
+            lng: request.points[request.points.length - 1][1]
+          })
+        ]
+      )
+      .reduce((prev, curr) => [...prev, ...curr], []);
+    this.setState({
+      data: latLngArray
+    });
+    // }
   }
 
   render() {
@@ -34,3 +45,7 @@ export default class Heatmap extends React.Component {
     return <HeatmapLayer data={this.state.data} />;
   }
 }
+
+Heatmap.defaultProps = {
+  requests: []
+};
