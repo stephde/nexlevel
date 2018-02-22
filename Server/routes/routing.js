@@ -95,10 +95,9 @@ router.get('/mockdynamic', (req, res, next) => {
             let maneuvers = route.leg[0].maneuver
                 .filter(m => m._type === 'PublicTransportManeuverType')
                 .filter((_, i) => i % 2 === 0)
-                .map((e, i) => ({
-                    ...e,
-                    ...route.publicTransportLine[i],
-                }))
+                .map((e, i) => {
+                    return Object.assign({}, e, route.publicTransportLine[i])
+                })
 
             let segments = maneuvers.map((maneuver) => {
                 let segment = getMockSegment()
