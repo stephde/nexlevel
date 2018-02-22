@@ -112,7 +112,6 @@ router.get('/mockdynamic', (req, res, next) => {
 
             segments.forEach((segment, index) => {
                 if(index < (segments.length - 1)) {
-                    console.log("Set arrival name and location")
                     segment.arrivalName = segments[index+1].departureName
                     segment.arrivalLocation = segments[index+1].departureLocation
                 } else {
