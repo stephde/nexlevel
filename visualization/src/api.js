@@ -1,7 +1,8 @@
 // Installs fetch as global function (can be mocked)
 import "isomorphic-fetch";
 
-const API_URL = "https://nexlevel-server.herokuapp.com/routing/";
+// const API_URL = "https://nexlevel-server.herokuapp.com/routing/";
+const API_URL = "https://inquisitive-witness.glitch.me/routing/";
 
 // Similar to:
 // http://stackoverflow.com/questions/29473426/fetch-reject-promise-with-json-error-object
