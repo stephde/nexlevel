@@ -14,6 +14,8 @@ const mapHereTransportMean = {
     busPublic: 'Bus'
 }
 
+const ONE_MINUTE = 60000
+
 let requestCache = []
 
 router.get('/', function (req, res, next) {
@@ -105,18 +107,30 @@ router.get('/mockdynamic', (req, res, next) => {
                 segment.departureLocation = maneuver.position
                 segment.travelDuration = maneuver.travelTime
                 segment.departureName = maneuver.stopName
-                segment.departureTime = runningTime
+                segment.departureDate = new Date(runningTime + ONE_MINUTE)
+                segment.departureTime = {
+                    h: segment.departureDate.getHours(),
+                    min: segment.departureDate.getMinutes()
+                }
 
                 if(maneuver.travelTime)
                     runningTime += maneuver.travelTime * 1000
+
+
+                segment.arrivalDate = new Date(runningTime)
+                segment.arrivalTime = {
+                    h: segment.arrivalDate.getHours(),
+                    min: segment.arrivalDate.getMinutes()
+                }
 
                 return segment
             })
 
             segments.forEach((segment, index) => {
                 if(index < (segments.length - 1)) {
-                    segment.arrivalName = segments[index+1].departureName
-                    segment.arrivalLocation = segments[index+1].departureLocation
+                    const nextSeg = segments[index+1]
+                    segment.arrivalName = nextSeg.departureName
+                    segment.arrivalLocation = nextSeg.departureLocation
                 } else {
                     segment.arrivalName = destName
                     segment.arrivalLocation = {
