@@ -11,21 +11,27 @@ export default class Connections extends React.Component {
     };
   }
 
-  componentDidMount() {
-    // getRequestedLocations()
-    //   .then(requests => {
-    //     const latLngArray = requests.map(request => ({
-    //       ...request,
-    //       points: request.points.map(point => ({
-    //         lat: point[0],
-    //         lng: point[1]
-    //       }))
-    //     }));
-    //     this.setState({
-    //       routes: latLngArray
-    //     });
-    //   })
-    //   .catch(error => console.log);
+  componentWillReceiveProps(nextProps) {
+    const latLngArray = nextProps.requests.map(request => ({
+      ...request,
+      // points: request.points.map(point => ({
+      //   lat: point[0],
+      //   lng: point[1]
+      // }))
+      points: [
+        {
+          lat: request.points[0][0],
+          lng: request.points[0][1]
+        },
+        {
+          lat: request.points[request.points.length - 1][0],
+          lng: request.points[request.points.length - 1][1]
+        }
+      ]
+    }));
+    this.setState({
+      routes: latLngArray
+    });
   }
 
   render() {

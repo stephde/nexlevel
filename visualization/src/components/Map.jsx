@@ -9,7 +9,9 @@ import {
 
 import { getRequestedLocations } from "../api";
 import Heatmap from "./Heatmap";
+import HeatmapEnd from "./HeatmapEnd";
 import Connections from "./Connections";
+import Overview from "./Overview";
 
 class Map extends Component {
   constructor(props) {
@@ -23,7 +25,7 @@ class Map extends Component {
       getRequestedLocations().then(requests => {
         this.setState({
           requests: requests.filter(
-            request => Date.now() - request.timestamp < 600000
+            request => Date.now() - request.timestamp < 10000
           )
         });
       });
@@ -36,17 +38,18 @@ class Map extends Component {
       lng: 0
     };
 
-    return (
+    return [
+      <Overview numberOfRides={this.state.requests.length} />,
       <GoogleMap
         defaultZoom={13}
         defaultCenter={{ lat: 52.518248, lng: 13.396607 }}
         defaultOptions={{ styles: mapOptions }}
       >
+        <HeatmapEnd requests={this.state.requests} />
         <Heatmap requests={this.state.requests} />
-        <Connections />
-        <Marker position={{ lat: 52.518248, lng: 13.396607 }} />
+        <Connections requests={this.state.requests} />
       </GoogleMap>
-    );
+    ];
   }
 }
 
