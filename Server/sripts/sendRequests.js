@@ -3,7 +3,7 @@ let axios = require('axios')
 const host = 'http://localhost:3000'
 const remoteHost = 'https://nexlevel-server.herokuapp.com'
 const remoteGlitch = 'https://inquisitive-witness.glitch.me'
-const path = '/routing/request'
+const path = '/routing/mockdynamic'
 
 const lat = {
     min: 13.307820,
@@ -25,11 +25,16 @@ function getNextCoordinate() {
     const longNachkomma = longBase + Math.floor((Math.random() * longDiff))
 
     //ToDo: get max and min coordinates for berlin and randomize
-    return {
-        //ToDo: is this the right oder?
-        longitude: parseFloat("13." + latNachkomma.toString()),
-        latitude: parseFloat("52." + longNachkomma.toString())
-    }
+    coords = [
+        parseFloat("52." + longNachkomma.toString()),
+        parseFloat("13." + latNachkomma.toString())
+    ]
+    return '['+coords.toString()+']'
+    // return {
+    //     //ToDo: is this the right oder?
+    //     longitude: parseFloat("13." + latNachkomma.toString()),
+    //     latitude: parseFloat("52." + longNachkomma.toString())
+    // }
 }
 
 function promisedTimeout(ms) {
@@ -44,7 +49,7 @@ async function run() {
 
     let promises = []
     for (let i = 0; i < numOfRequest; i++) {
-        promises.push(axios.post(remoteGlitch + path, {
+        promises.push(axios.get(remoteGlitch + path, {
             params: {
                 origin: getNextCoordinate(),
                 destination: getNextCoordinate()
