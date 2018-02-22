@@ -109,7 +109,7 @@ router.get('/mockdynamic', (req, res, next) => {
                 segment.departureName = maneuver.stopName
                 segment.departureDate = new Date(runningTime + ONE_MINUTE)
                 segment.departureTime = {
-                    h: segment.departureDate.getHours(),
+                    h: timeZonedHours(segment.departureDate),
                     min: segment.departureDate.getMinutes()
                 }
 
@@ -119,7 +119,7 @@ router.get('/mockdynamic', (req, res, next) => {
 
                 segment.arrivalDate = new Date(runningTime)
                 segment.arrivalTime = {
-                    h: segment.arrivalDate.getHours(),
+                    h: timeZonedHours(segment.arrivalDate),
                     min: segment.arrivalDate.getMinutes()
                 }
 
@@ -212,6 +212,15 @@ function cacheRequest(start, segments) {
         timestamp: Date.now(),
         points: [start].concat(segments.map(s => [s.arrivalLocation.latitude, s.arrivalLocation.longitude]))
     })
+}
+
+function timeZonedHours(date) {
+    let germanhours = date.getUTCHours() + 1
+
+    if(germanhours > 23)
+        return 0
+
+    return germanhours
 }
 
 module.exports = router;
