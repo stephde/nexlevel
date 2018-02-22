@@ -21,7 +21,8 @@ import {
 } from "react-native";
 import BusMarker from "./BusMarker";
 import Bus from "./bus.png";
-import Underground from "./underground.png";
+import SBahn from "./underground.png";
+import Underground from "./metro.png";
 
 const { height, width } = Dimensions.get("window");
 
@@ -42,7 +43,10 @@ class RouteView extends React.Component {
       case "UBahn":
         return Underground;
       case "SBahn":
-        return Underground;
+        return SBahn;
+      case "railRegional":
+      case "trainRegional":
+        return SBahn;
       case "Walk":
         return Underground;
       default:
@@ -53,11 +57,14 @@ class RouteView extends React.Component {
   _generateHeadline(segment) {
     switch (segment.type) {
       case "Bus":
-        return `Take the bus "${segment.name}"`;
+        return `Look for the bus "${segment.name}"`;
       case "UBahn":
         return `Take the U-Bahn`;
       case "SBahn":
+      case "railRegional":
         return `Take the S-Bahn`;
+      case "trainRegional":
+        return "Take the Regio";
       case "Walk":
         return `Walk`;
       default:
@@ -72,9 +79,12 @@ class RouteView extends React.Component {
 
   componentDidMount() {
     setTimeout(() => {
+      const destination = this.destination.coordinate;
+      const name = this.destination.name;
       fetch(
-        `https://inquisitive-witness.glitch.me/routing/mockdynamic`
-        //?origin=[52.4989379,13.3747849]&destination=${this.destination.coordinate}
+        `https://inquisitive-witness.glitch.me/routing/mockdynamic?origin=[52.4989379,13.3747849]&destination=${`[${
+          destination.latitude
+        },${destination.longitude}]`}&destName=${name}`
       )
         .then(response => response.json())
         .then(json =>
@@ -83,7 +93,8 @@ class RouteView extends React.Component {
             connectionSegments: json.connectionSegments,
             bus: {}
           })
-        );
+        )
+        .catch(e => console.error(e));
     }, 1000);
   }
 
@@ -120,7 +131,13 @@ class RouteView extends React.Component {
                       segment.departureName
                     } - ${segment.arrivalName}`}</Text>
                   </CardItem>
-                  <CardItem>
+                  <CardItem
+                    style={
+                      segment.type === "Bus"
+                        ? styles.highlightedContent
+                        : styles.regularContent
+                    }
+                  >
                     <Body>
                       <Text style={styles.headline}>
                         {this._generateHeadline(segment)}
@@ -179,9 +196,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#DDD"
   },
-  textContent: {
-    fontSize: 20,
-    color: "red"
+  regularContent: {
+    backgroundColor: "#F5F5F5"
+  },
+  highlightedContent: {
+    backgroundColor: "#FAFAFF"
   },
   headline: {
     fontWeight: "bold"
